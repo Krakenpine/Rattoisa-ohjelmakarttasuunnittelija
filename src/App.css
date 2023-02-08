@@ -1,0 +1,152 @@
+.App {
+  text-align: center;
+}
+
+.Paiva-lista {
+  display: flex;
+  flex-direction: row;
+}
+
+.Paiva {
+  width: 15em;
+  display: flex;
+  flex-direction: column;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+
+.Paiva-nimi {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
+
+.tunti {
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sopii {
+  background: #DFD;
+}
+
+.ei-sovi {
+  background: #FDD;
+}
+
+.ei-mielellaan {
+  background: #DDF;
+}
+
+.mahdoton-ohjelma {
+  background: red;
+}
+
+.mahdoton-ohjelma-valittu {
+  background: repeating-linear-gradient(
+    45deg,
+    #F66,
+    #F66 10px,
+    red 10px,
+    red 20px
+  );
+}
+
+.kelpaava-ohjelma {
+  background: green;
+}
+
+.kelpaava-ohjelma-valittu {
+  background: repeating-linear-gradient(
+    45deg,
+    #6F6,
+    #6F6 10px,
+    green 10px,
+    green 20px
+  );
+}
+
+.luokaton-ohjelma {
+  background: blue;
+}
+
+.luokaton-ohjelma-valittu {
+  background: repeating-linear-gradient(
+    45deg,
+    #66F,
+    #66F 10px,
+    blue 10px,
+    blue 20px
+  );
+}
+
+.poista-ohjelma {
+  background: #FDD;
+  width: 100%;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Ohjelma-kuvaus-lista-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.parillinen {
+  background: #EEE;
+}
+
+.pariton {
+  background: #DDD;
+}
+
+.Ohjelma-kuvaus-main {
+  display: flex;
+  flex-direction: row;
+}
+
+.Ohjelma-kuvaus-nimi {
+  width: 50vw;
+  max-width: 50em;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.Ohjelma-kuvaus-kesto {
+  width: 8em;
+  display: flex;
+  justify-content: flex-start;
+  border-left: solid #AAA;
+  padding-left: 1em;
+}
+
+.Ohjelma-kuvaus-paiva {
+  width: 16em;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.asetettu {
+  background: #EFE;
+}
+
+.asetus-parillinen {
+  box-shadow: inset 0px 2px 0px 0px #EEE,
+              inset 0px -2px 0px 0px #EEE;
+}
+
+.asetus-pariton {
+  box-shadow: inset 0px 2px 0px 0px #DDD,
+              inset 0px -2px 0px 0px #DDD;
+}
+
+
