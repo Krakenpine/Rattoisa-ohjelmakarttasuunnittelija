@@ -2,8 +2,10 @@
  POC of program planner for a amateur radio station
  Only in Finnish for now, sorry.
 
- Erittäin alkutekijöissään.
- Katso esimerkki tiedostosta Mockohjelmadata.ts.
+ Erittäin alkutekijöissään oleva pop-up radioaseman ohjelmakarttasuunnittelutyökalu.
+
+ Katso esimerkki tiedostosta `Mockohjelmadata.ts.`
+
  Ohjelmille voi asettaa blokkaavat ohjelmat objektina `BlokkaavaOhjelmaRaaka` johon laitetaan blokkaavan ohjelman nimi
  ja paljonko väliä täytyy olla ennen sen alkamista ja loppumista.
 
@@ -12,9 +14,10 @@
 
  Propsissa `luokka` on lista stringeistä jotka kertovat onko ohjelma `Tunti`-objektin luokalle.
 
+ `npm start` ja pitäisi käynnistyä.
 
  Ohjelmia voi klikkailla joko ruudun alalaidan listasta tai suoraan ohjelmakartasta.
- 
+
  Vihreä tarkoittaa, että asia on kunnossa.
 
  Punainen tarkoittaa, että ohjelma ei voi olla siinä.
