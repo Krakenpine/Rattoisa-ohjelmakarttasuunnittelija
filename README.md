@@ -23,3 +23,9 @@
  Punainen tarkoittaa, että ohjelma ei voi olla siinä.
 
  Sininen tarkoittaa, että ohjelma teknisesti voi olla siinä, mutta on laitettu esim. iltaohjelma aamuun.
+
+ Kehitysympäristöä voi vaihtoehtoisesti ajaa kontissa: 
+
+ `docker build -t localhost/ohjelmistoija-dev .`
+
+ `docker run --rm -it -p 3000:3000 localhost/ohjelmistoija-dev`
