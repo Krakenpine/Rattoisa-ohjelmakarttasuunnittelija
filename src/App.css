@@ -101,6 +101,16 @@
   width: 100%;
 }
 
+.lista-valittu {
+  background: repeating-linear-gradient(
+    45deg,
+    #FFF,
+    #FFF 10px,
+    #EEEEEE 10px,
+    #EEEEEE 20px
+  );
+}
+
 .parillinen {
   background: #EEE;
 }
@@ -112,6 +122,7 @@
 .Ohjelma-kuvaus-main {
   display: flex;
   flex-direction: row;
+  cursor: pointer;
 }
 
 .Ohjelma-kuvaus-nimi {
@@ -122,17 +133,36 @@
 }
 
 .Ohjelma-kuvaus-kesto {
-  width: 8em;
+  width: 20em;
   display: flex;
   justify-content: flex-start;
   border-left: solid #AAA;
   padding-left: 1em;
 }
 
+.Ohjelma-kesto-nyt {
+  margin-right: 1em;
+}
+
+.Ohjelma-monikesto-lista {
+  display: flex;
+  flex-direction: row;
+}
+
+.Ohjelma-monikesto {
+  width: 2em;
+  box-shadow: inset 1px 1px 0px 0px #BBB,
+              inset 0px -1px 0px 1px #BBB;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .Ohjelma-kuvaus-paiva {
   width: 16em;
   display: flex;
   justify-content: flex-start;
+  flex-direction: row;
 }
 
 .asetettu {

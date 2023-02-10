@@ -5,7 +5,8 @@ export interface Ohjelma {
     paiva: number,
     mahdoton: Aika[],
     blokkaavatOhjelmat: BlokkaavaOhjelma[],
-    luokka: string[]
+    luokka: string[],
+    moniKesto: number[]
   }
   
 export interface BlokkaavaOhjelma {
@@ -37,7 +38,7 @@ export interface BlokkaavaOhjelmaRaaka {
 }
 
 export interface OhjelmaRaaka {
-    kesto: number,
+    kesto: number[],
     alku: number,
     paiva: number,
     mahdoton: Aika[],

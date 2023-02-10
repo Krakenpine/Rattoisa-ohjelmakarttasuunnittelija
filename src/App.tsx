@@ -6,12 +6,13 @@ import { ohjelmaAika, paivanTunnit } from "./Aika"
 
 const ohjelmaLista: Ohjelma[] = ohjelmadata.map(ohjelma => {return {
   nimi: ohjelma.nimi,
-  kesto: ohjelma.kesto,
+  kesto: ohjelma.kesto[0],
   paiva: ohjelma.paiva,
   alku: ohjelma.alku,
   mahdoton: ohjelma.mahdoton,
   luokka: ohjelma.luokka,
-  blokkaavatOhjelmat: []
+  blokkaavatOhjelmat: [],
+  moniKesto: ohjelma.kesto
 }});
 
 ohjelmadata.forEach(od => {
@@ -108,24 +109,26 @@ interface OhjelmatAction {
 }
 
 interface OhjelmatPayload {
-  paiva: number,
-  tunti: number
+  paiva?: number,
+  tunti?: number,
+  kestoIndeksi?: number
 }
 
 
 const ohjelmatReducer = (state: Ohjelma[], action: OhjelmatAction) => {
   if (action.type > -1 && action.payload.paiva === -1) {
-    state[action.type].paiva = -1;
-    state[action.type].alku = 0;
+    state[action.type].paiva = -1
+    state[action.type].alku = 0
   } else if (action.type > -1 && action.type < state.length) {
-    state[action.type].paiva = action.payload.paiva;
-    state[action.type].alku = action.payload.tunti;
+    action.payload.paiva !== undefined && (state[action.type].paiva = action.payload.paiva)
+    action.payload.tunti !== undefined && (state[action.type].alku = action.payload.tunti)
+    action.payload.kestoIndeksi !== undefined && (state[action.type].kesto = state[action.type].moniKesto[action.payload.kestoIndeksi])
   }
   return [ ...state ]
 }
 
-function mahtuukoOhjelma(ohjelma: Ohjelma, paiva: number, tunti: number, ohjelmat: Ohjelma[]): boolean {
-  const ohjelmanTunnit = laskeTunnitAjallaRaaka(ohjelma.kesto, paiva, tunti)
+function mahtuukoOhjelma(ohjelma: Ohjelma, paiva: number, tunti: number, ohjelmat: Ohjelma[], lisaTunnit: number = 0): boolean {
+  const ohjelmanTunnit = laskeTunnitAjallaRaaka(ohjelma.kesto + lisaTunnit, paiva, tunti)
   let mahtuuko = true
   const kaikkiTunnit: number[] = []
   ohjelmat.filter(o => o.nimi !== ohjelma.nimi).map(o =>laskeTunnitRaaka(o)).forEach(t => t.forEach(t2 => kaikkiTunnit.push(t2)))
@@ -147,13 +150,25 @@ function App() {
   useEffect(() =>{}, [ohjelmat, valittuOhjelma])
 
   function ohjelmaClick(ohjelma: Ohjelma, paiva: number, tunti: number) {
-    setValittuOhjelma(ohjelmat.findIndex(o => o.nimi === ohjelma.nimi))
+    if (valittuOhjelma === -1) {
+      setValittuOhjelma(ohjelmat.findIndex(o => o.nimi === ohjelma.nimi))
+    } else if (ohjelma.nimi === ohjelmat[valittuOhjelma].nimi) {
+      if (paiva === ohjelma.paiva && tunti === ohjelma.alku) {
+        setValittuOhjelma(-1)
+      } else {
+        if (mahtuukoOhjelma(ohjelma, paiva, tunti, ohjelmat)) {
+          ohjelmatDispatch({ type: ohjelmat.findIndex(o => o.nimi === ohjelma.nimi), payload: {paiva, tunti}})
+        }
+      }
+    }
+
+    
   }
 
   function tyhjaClick(paiva: number, tunti: number) {
     if (valittuOhjelma !== -1) {
       if (mahtuukoOhjelma(ohjelmat[valittuOhjelma], paiva, tunti, ohjelmat)) {
-        ohjelmatDispatch({ type: valittuOhjelma, payload: {paiva, tunti: tunti}})
+        ohjelmatDispatch({ type: valittuOhjelma, payload: {paiva, tunti}})
         setValittuOhjelma(-1)
       }
     }
@@ -163,6 +178,16 @@ function App() {
     if (valittuOhjelma !== -1) {
       ohjelmatDispatch({ type: valittuOhjelma, payload: {paiva: -1, tunti: 0}})
       setValittuOhjelma(-1)
+    }
+  }
+
+  function vaihdaKesto(ohjelmaIndeksi: number, kestoIndeksi: number) {
+    const ohjelma = ohjelmat[ohjelmaIndeksi]
+    if (ohjelma !== undefined) {
+      const lisatunnit = ohjelma.moniKesto[kestoIndeksi] - ohjelma.kesto
+      if (mahtuukoOhjelma(ohjelma, ohjelma.paiva, ohjelma.alku, ohjelmat, lisatunnit)) {
+        ohjelmatDispatch({ type: ohjelmaIndeksi, payload: { kestoIndeksi }})
+      }
     }
   }
 
@@ -221,10 +246,13 @@ function App() {
       <div className="poista-ohjelma" onClick={() => poistaOhjelmaClick()}>Poista ohjelma</div>
       <div className="Ohjelma-kuvaus-lista-main">
         {ohjelmat.map((ohjelma, index) => {
-          return <div key={index} className={"Ohjelma-kuvaus-main " + (index % 2 === 0 ? "parillinen" : "pariton")} onClick={() => setValittuOhjelma(index)}>
-              <div className="Ohjelma-kuvaus-nimi">{ohjelma.nimi}</div>
-              <div className="Ohjelma-kuvaus-kesto">Kesto: {ohjelma.kesto}</div>
-              <div className={"Ohjelma-kuvaus-paiva " + (ohjelma.paiva > -1 ? "asetettu" : "puuttuu") + (index % 2 === 0 ? " asetus-parillinen" : " asetus-pariton") }>{ohjelma.paiva > -1 ? ("Päivä: " + ohjelma.paiva + " Klo. " + ohjelma.alku + " - " + (ohjelma.alku + ohjelma.kesto)) : "puuttuu"}</div>
+          return <div key={index} className={"Ohjelma-kuvaus-main " + (valittuOhjelma === index ? "lista-valittu" : index % 2 === 0 ? "parillinen" : "pariton")}>
+              <div className="Ohjelma-kuvaus-nimi"  onClick={() => setValittuOhjelma(index)}>{ohjelma.nimi}</div>
+              <div className="Ohjelma-kuvaus-kesto">
+                <div className="Ohjelma-kesto-nyt"> Kesto: {ohjelma.kesto} </div>
+                { ohjelma.moniKesto.length > 1 && <div className="Ohjelma-monikesto-lista">{ohjelma.moniKesto.map((mk, mkindex) => { return <div key={mkindex} className="Ohjelma-monikesto" onClick={() => vaihdaKesto(index, mkindex)}>{mk}</div>})} </div>}
+                </div>
+              <div className={"Ohjelma-kuvaus-paiva " + (ohjelma.paiva > -1 ? "asetettu" : "puuttuu") + (index % 2 === 0 ? " asetus-parillinen" : " asetus-pariton") } onClick={() => setValittuOhjelma(index)}>{ohjelma.paiva > -1 ? ("Päivä: " + ohjelma.paiva + " Klo. " + ohjelma.alku + " - " + (ohjelma.alku + ohjelma.kesto)) : "puuttuu"}</div>
             </div>
         })}
       </div>
