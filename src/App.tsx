@@ -161,8 +161,6 @@ function App() {
         }
       }
     }
-
-    
   }
 
   function tyhjaClick(paiva: number, tunti: number) {
@@ -181,14 +179,67 @@ function App() {
     }
   }
 
+  function haeOhjelmanNimi(paiva: number, tunti: number): string {
+    if (paiva < 0 || tunti < 0) {
+      return ""
+    }
+    let ohjelmanNimi = ""
+    ohjelmat.forEach(ohjelma => {
+      if (ohjelma.paiva > -1) {
+        if (laskeTunnitRaaka(ohjelma).indexOf(ajastaRaaka(paiva, tunti)) > -1) {
+          ohjelmanNimi = ohjelma.nimi
+        }
+      }
+    })
+    return ohjelmanNimi
+  }
+
   function vaihdaKesto(ohjelmaIndeksi: number, kestoIndeksi: number) {
     const ohjelma = ohjelmat[ohjelmaIndeksi]
     if (ohjelma !== undefined) {
-      const lisatunnit = ohjelma.moniKesto[kestoIndeksi] - ohjelma.kesto
-      if (mahtuukoOhjelma(ohjelma, ohjelma.paiva, ohjelma.alku, ohjelmat, lisatunnit)) {
+      if (ohjelma.paiva > -1) {
+        const lisatunnit = ohjelma.moniKesto[kestoIndeksi] - ohjelma.kesto
+        if (mahtuukoOhjelma(ohjelma, ohjelma.paiva, ohjelma.alku, ohjelmat, lisatunnit)) {
+          ohjelmatDispatch({ type: ohjelmaIndeksi, payload: { kestoIndeksi }})
+        }
+      } else {
         ohjelmatDispatch({ type: ohjelmaIndeksi, payload: { kestoIndeksi }})
       }
     }
+  }
+
+  function haeTunninLuokka(tunti: number): string {
+    const tunninIndeksi = paivanTunnit.findIndex(t => t.aika === tunti)
+    if (tunninIndeksi > -1) {
+      return paivanTunnit[tunninIndeksi].luokka
+    } else {
+      return ""
+    }
+  }
+
+  function kestoNapinVari(ohjelma: Ohjelma, kestoIndeksi: number): string {
+    if (ohjelma !== undefined) {
+        if (ohjelma.kesto === ohjelma.moniKesto[kestoIndeksi]) {
+          return " valittu-kesto"
+        }
+        const lisatunnit = ohjelma.moniKesto[kestoIndeksi] - ohjelma.kesto
+        console.log(lisatunnit)
+        if (lisatunnit > 0) {
+          if (haeOhjelmanNimi(ohjelma.paiva, ohjelma.alku + ohjelma.kesto + lisatunnit - 1) !== "") {
+            return " kesto-ei-mahdu"
+          }
+          let onkoEiHaluttu = " muu-vapaa"
+          for (let i = ohjelma.alku + ohjelma.kesto; i < ohjelma.alku + ohjelma.kesto + lisatunnit; i++) {
+            if (!ohjelma.luokka.some(l => l === haeTunninLuokka(i))) {
+              onkoEiHaluttu = " kesto-ei-mielellaan"
+            }
+          }
+          return onkoEiHaluttu
+          
+        }
+
+      }
+    return " muu-vapaa"
   }
 
   return (
@@ -204,9 +255,20 @@ function App() {
                 const ohjelmanIndeksi = ohjelmat.findIndex(ohjelma => laskeAlkutuntiRaaka(ohjelma) === ajastaRaaka(paiva.indeksi, tunti.aika) || (ajastaRaaka(paiva.indeksi, tunti.aika) > laskeAlkutuntiRaaka(ohjelma) && laskeLopputuntiRaaka(ohjelma)> ajastaRaaka(paiva.indeksi, tunti.aika) ))
                 if (ohjelmanIndeksi > -1) {
                   if (onkoMahdoton(ohjelmat[ohjelmanIndeksi], paiva.indeksi, tunti.aika)) {
-                    return <div key={tunti.aika} className={"tunti " + (valittuOhjelma !== -1 ? ohjelmat[ohjelmanIndeksi].nimi === ohjelmat[valittuOhjelma].nimi ? "mahdoton-ohjelma-valittu" : "mahdoton-ohjelma" : "mahdoton-ohjelma")} onClick={() => ohjelmaClick(ohjelmat[ohjelmanIndeksi], paiva.indeksi, tunti.aika)}>
-                          {ohjelmat[ohjelmanIndeksi].nimi}
-                          </div>
+                    return (
+                      <div key={tunti.aika} 
+                        className={"tunti " + 
+                            (valittuOhjelma !== -1 ?
+                              ohjelmat[ohjelmanIndeksi].nimi === ohjelmat[valittuOhjelma].nimi ? 
+                                "mahdoton-ohjelma-valittu" : 
+                                "mahdoton-ohjelma" : 
+                              "mahdoton-ohjelma") + 
+                            (haeOhjelmanNimi(paiva.indeksi, tunti.aika - 1 ) === ohjelmat[ohjelmanIndeksi].nimi ? " sama-ohjelma-ylapuolella" : " eri-ohjelma-ylapuolella") +
+                            (haeOhjelmanNimi(paiva.indeksi, tunti.aika + 1 ) === ohjelmat[ohjelmanIndeksi].nimi ? "-sama-ohjelma-alapuolella" : "-eri-ohjelma-alapuolella")} 
+                          onClick={() => ohjelmaClick(ohjelmat[ohjelmanIndeksi], paiva.indeksi, tunti.aika)}>
+                        {(haeOhjelmanNimi(paiva.indeksi, tunti.aika -1 ) === ohjelmat[ohjelmanIndeksi].nimi) ? " " : ohjelmat[ohjelmanIndeksi].nimi}
+                      </div>
+                    )
                   } else {
                     const luokkaNimi: string[] = []
                     if (ohjelmat[ohjelmanIndeksi].luokka.some(l => l === tunti.luokka)) {
@@ -220,9 +282,16 @@ function App() {
                         luokkaNimi.push("valittu")
                       }
                     }
-                    return <div key={tunti.aika} className={"tunti " + luokkaNimi.join("-")} onClick={() => ohjelmaClick(ohjelmat[ohjelmanIndeksi], paiva.indeksi, tunti.aika)}>
-                    {ohjelmat[ohjelmanIndeksi].nimi}
-                    </div>
+                    return (
+                      <div key={tunti.aika} 
+                        className={"tunti " + 
+                          luokkaNimi.join("-") + 
+                          (haeOhjelmanNimi(paiva.indeksi, tunti.aika - 1 ) === ohjelmat[ohjelmanIndeksi].nimi ? " sama-ohjelma-ylapuolella" : " eri-ohjelma-ylapuolella") +
+                          (haeOhjelmanNimi(paiva.indeksi, tunti.aika + 1 ) === ohjelmat[ohjelmanIndeksi].nimi ? "-sama-ohjelma-alapuolella" : "-eri-ohjelma-alapuolella")}
+                        onClick={() => ohjelmaClick(ohjelmat[ohjelmanIndeksi], paiva.indeksi, tunti.aika)}>
+                          {haeOhjelmanNimi(paiva.indeksi, tunti.aika - 1 ) === ohjelmat[ohjelmanIndeksi].nimi ? " " : ohjelmat[ohjelmanIndeksi].nimi }
+                      </div>
+                    )
                   }
                 } else {
                   let luokkaNimi: string = "";
@@ -236,7 +305,7 @@ function App() {
                     }
                   }
                   
-                  return <div key={tunti.aika} className={"tunti" + luokkaNimi} onClick={() => tyhjaClick(paiva.indeksi, tunti.aika)}>{tunti.aika}</div>
+                  return <div key={tunti.aika} className={"tunti" + luokkaNimi + " tuntiborderit"} onClick={() => tyhjaClick(paiva.indeksi, tunti.aika)}>{tunti.aika}</div>
                 }
               })}
               </div>
@@ -250,7 +319,7 @@ function App() {
               <div className="Ohjelma-kuvaus-nimi"  onClick={() => setValittuOhjelma(index)}>{ohjelma.nimi}</div>
               <div className="Ohjelma-kuvaus-kesto">
                 <div className="Ohjelma-kesto-nyt"> Kesto: {ohjelma.kesto} </div>
-                { ohjelma.moniKesto.length > 1 && <div className="Ohjelma-monikesto-lista">{ohjelma.moniKesto.map((mk, mkindex) => { return <div key={mkindex} className="Ohjelma-monikesto" onClick={() => vaihdaKesto(index, mkindex)}>{mk}</div>})} </div>}
+                { ohjelma.moniKesto.length > 1 && <div className="Ohjelma-monikesto-lista">{ohjelma.moniKesto.map((mk, mkindex) => { return <div key={mkindex} className={"Ohjelma-monikesto" + kestoNapinVari(ohjelma, mkindex)} onClick={() => vaihdaKesto(index, mkindex)}>{mk}</div>})} </div>}
                 </div>
               <div className={"Ohjelma-kuvaus-paiva " + (ohjelma.paiva > -1 ? "asetettu" : "puuttuu") + (index % 2 === 0 ? " asetus-parillinen" : " asetus-pariton") } onClick={() => setValittuOhjelma(index)}>{ohjelma.paiva > -1 ? ("Päivä: " + ohjelma.paiva + " Klo. " + ohjelma.alku + " - " + (ohjelma.alku + ohjelma.kesto)) : "puuttuu"}</div>
             </div>

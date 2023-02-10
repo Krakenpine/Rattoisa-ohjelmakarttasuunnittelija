@@ -11,25 +11,57 @@
   width: 15em;
   display: flex;
   flex-direction: column;
-  border-style: solid;
+  /*border-style: solid;
   border-color: black;
-  border-width: 1px;
+  border-width: 1px;*/
 }
 
 .Paiva-nimi {
   border-style: solid;
   border-color: black;
-  border-width: 1px;
-}
-
-.tunti {
-  border-style: solid;
-  border-color: black;
-  border-width: 1px;
+  border-width: 2px;
   height: 3em;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tunti {
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tuntiborderit {
+  box-shadow: inset 0px 1px 0px 0px black,
+              inset 0px -1px 0px 0px black,
+              inset 1px 0px 0px 0px black,
+              inset -1px 0px 0px 0px black;
+}
+
+.sama-ohjelma-ylapuolella-eri-ohjelma-alapuolella {
+  box-shadow: inset 0px -1px 0px 0px black,
+              inset 1px 0px 0px 0px black,
+              inset -1px 0px 0px 0px black;
+}
+
+.sama-ohjelma-ylapuolella-sama-ohjelma-alapuolella {
+  box-shadow: inset 1px 0px 0px 0px black,
+              inset -1px 0px 0px 0px black;
+}
+
+.eri-ohjelma-ylapuolella-eri-ohjelma-alapuolella {
+  box-shadow: inset 0px 1px 0px 0px black,
+              inset 0px -1px 0px 0px black,
+              inset 1px 0px 0px 0px black,
+              inset -1px 0px 0px 0px black;
+}
+
+.eri-ohjelma-ylapuolella-sama-ohjelma-alapuolella {
+  box-shadow: inset 0px 1px 0px 0px black,
+              inset 1px 0px 0px 0px black,
+              inset -1px 0px 0px 0px black;
 }
 
 .sopii {
@@ -158,6 +190,22 @@
   margin-right: 5px;
 }
 
+.valittu-kesto {
+  background: #AAA;
+}
+
+.kesto-ei-mahdu {
+  background: #FAA;
+}
+
+.kesto-ei-mielellaan {
+  background: #AAF;
+}
+
+.muu-vapaa {
+  background: #AFA;
+}
+
 .Ohjelma-kuvaus-paiva {
   width: 16em;
   display: flex;
@@ -178,5 +226,3 @@
   box-shadow: inset 0px 2px 0px 0px #DDD,
               inset 0px -2px 0px 0px #DDD;
 }
-
-

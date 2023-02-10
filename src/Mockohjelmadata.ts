@@ -50,7 +50,7 @@ export const ohjelmadata: OhjelmaRaaka[] = [
         alku: 0
     },
     {
-        nimi: "Jarrujen iltapäivä1",
+        nimi: "Jarrujen iltapäivä2",
         kesto: [2, 3],
         luokka: [ "iltapäivä", "ilta", "yö" ],
         mahdoton: [],
