@@ -296,7 +296,9 @@ function App() {
                 } else {
                   let luokkaNimi: string = "";
                   if (valittuOhjelma > -1) {
-                    if (onkoMahdotonAsetus(ohjelmat[valittuOhjelma], paiva.indeksi, tunti.aika)) {
+                    if (!mahtuukoOhjelma(ohjelmat[valittuOhjelma], paiva.indeksi, tunti.aika, ohjelmat)) {
+                      luokkaNimi = " ei-mahdu"
+                    } else if (onkoMahdotonAsetus(ohjelmat[valittuOhjelma], paiva.indeksi, tunti.aika)) {
                       luokkaNimi = " ei-sovi";
                     } else if (onkoHuono(ohjelmat[valittuOhjelma], tunti)) {
                       luokkaNimi = " ei-mielellaan"

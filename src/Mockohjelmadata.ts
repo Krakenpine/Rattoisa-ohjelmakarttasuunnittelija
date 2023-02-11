@@ -96,7 +96,7 @@ export const ohjelmadata: OhjelmaRaaka[] = [
     },
     {
         nimi: "Omituinen aamu",
-        kesto: [2],
+        kesto: [2, 3, 4],
         luokka: [ "aamu", "aamupäivä" ],
         mahdoton: [],
         blokkaavatOhjelmatRaaka: [ { nimi: "Eurodance-yö", ennen: 12, jalkeen: 12} ],
@@ -114,7 +114,7 @@ export const ohjelmadata: OhjelmaRaaka[] = [
     },
     {
         nimi: "Lastenlauluohjelma",
-        kesto: [2],
+        kesto: [2, 3],
         luokka: [ "ilta", "yö" ],
         mahdoton: [],
         blokkaavatOhjelmatRaaka: [],
@@ -123,7 +123,7 @@ export const ohjelmadata: OhjelmaRaaka[] = [
     },
     {
         nimi: "Kammottavan musiikin yö",
-        kesto: [8],
+        kesto: [8, 6],
         luokka: [ "yö" ],
         mahdoton: [ { paiva: 2, tunnit: [] }, { paiva: 3, tunnit: [] }, { paiva: 4, tunnit: [] }, { paiva: 5, tunnit: [] }, { paiva: 6, tunnit: [] }, { paiva: 7, tunnit: [] } ],
         blokkaavatOhjelmatRaaka: [],
@@ -204,7 +204,7 @@ export const ohjelmadata: OhjelmaRaaka[] = [
     },
     {
         nimi: "Ufot, uskonto ja paholainen",
-        kesto: [4],
+        kesto: [4, 5, 6, 7, 8],
         luokka: [ "iltapäivä", "ilta", "yö" ],
         mahdoton: [],
         blokkaavatOhjelmatRaaka: [],

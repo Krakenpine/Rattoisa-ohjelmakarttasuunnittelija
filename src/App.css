@@ -72,6 +72,16 @@
   background: #FDD;
 }
 
+.ei-mahdu {
+  background: repeating-linear-gradient(
+    to right,
+    #FAA 0px,
+    #FAA 5%,
+    #FDD 5%,
+    #FDD 10%
+  );
+}
+
 .ei-mielellaan {
   background: #DDF;
 }
@@ -83,10 +93,10 @@
 .mahdoton-ohjelma-valittu {
   background: repeating-linear-gradient(
     45deg,
-    #F66,
-    #F66 10px,
-    red 10px,
-    red 20px
+    #F66 0px,
+    #F66 5%,
+    red 5%,
+    red 10%
   );
 }
 
@@ -97,10 +107,10 @@
 .kelpaava-ohjelma-valittu {
   background: repeating-linear-gradient(
     45deg,
-    #6F6,
-    #6F6 10px,
-    green 10px,
-    green 20px
+    #6F6 0px,
+    #6F6 5%,
+    green 5%,
+    green 10%
   );
 }
 
@@ -111,10 +121,10 @@
 .luokaton-ohjelma-valittu {
   background: repeating-linear-gradient(
     45deg,
-    #66F,
-    #66F 10px,
-    blue 10px,
-    blue 20px
+    #66F 0px,
+    #66F 5%,
+    blue 5%,
+    blue 10%
   );
 }
 
